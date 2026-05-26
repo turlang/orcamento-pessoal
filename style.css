@@ -223,3 +223,152 @@ h3 { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-
     .insight-card h3 { color: #4f46e5 !important; font-size: 10px !important; }
     .insight-card p { color: #334155 !important; font-size: 11px !important; }
 }
+
+
+/* =========================================================================
+   📱 CORREÇÕES EXTRAS PARA CELULAR
+   ========================================================================= */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.main-layout, .dashboard-content, .card, .kpi-grid, .chart-grid {
+    min-width: 0;
+}
+
+@media (max-width: 600px) {
+    body { padding-bottom: 24px; }
+
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* O main já usa .container; remove padding duplicado no celular */
+    .main-layout {
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 18px;
+    }
+
+    .main-header {
+        padding: 18px 0;
+        margin-bottom: 18px;
+    }
+
+    .header-container {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .period-control {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .kpi-value {
+        font-size: 22px;
+        word-break: break-word;
+    }
+
+    .form-group input, .form-group select {
+        font-size: 16px; /* evita zoom automático no iPhone */
+    }
+
+    .t-item {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .t-info p {
+        max-width: 150px;
+    }
+
+    .timeline-container {
+        height: 250px !important;
+        padding: 20px 10px 12px 10px !important;
+        gap: 10px !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .timeline-column {
+        min-width: 82px !important;
+    }
+}
+/* ===== MOBILE FIX DEFINITIVO ===== */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+
+    body {
+        padding-bottom: 20px;
+    }
+
+    .main-header {
+        padding: 14px 0;
+        margin-bottom: 16px;
+    }
+
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .main-header h1 {
+        font-size: 20px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .timeline-container {
+        height: 180px !important;
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+
+    .timeline-column {
+        min-width: 55px !important;
+    }
+
+    .timeline-label {
+        font-size: 8px !important;
+    }
+
+    .timeline-saldo-text {
+        font-size: 9px !important;
+    }
+
+    .kpi-value {
+        font-size: 22px !important;
+    }
+
+    .t-info p {
+        max-width: 100px;
+    }
+
+    .btn-submit {
+        font-size: 13px !important;
+        padding: 12px !important;
+    }
+}
