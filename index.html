@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orçamento familiar</title>
+    <title>Orçamento Familiar - Dashboard BI Premium</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Conexão com o Manifesto da PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Ícone da aba -->
+    <link rel="icon" type="image/svg+xml" href="https://githubusercontent.com">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log('PWA: Service Worker Ativado com Sucesso!'))
+                .catch((err) => console.log('PWA: Erro ao registrar SW:', err));
+        }
+    </script>
 </head>
 <body>
 
@@ -14,7 +30,6 @@
                 <h1>Orçamento Familiar</h1>
                 <p>Análise de Dados Orçamentário Familiar</p>
             </div>
-            <!-- Controle de Período Cronológico (Mês a Mês) -->
             <div class="period-control">
                 <label for="month-selector">Período de Análise:</label>
                 <select id="month-selector">
@@ -36,7 +51,6 @@
     </header>
 
     <main class="container main-layout">
-        <!-- Painel de Entrada de Dados -->
         <section class="card sidebar">
             <h2>Novos Lançamentos</h2>
             <form id="finance-form">
@@ -70,82 +84,82 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn-submit">Registrar no Banco de Dados</button>
+                <button type="submit" class="btn-submit btn-primary">Registrar Lançamento</button>
             </form>
 
-            <!-- Área de Importar Planilha Excel & Limpeza de Dados -->
-            <div class="history-section" style="margin-top: 15px; padding-top: 15px;">
+            <div class="history-section">
+                <h3>Meta de Economia Mensal</h3>
+                <div class="form-group">
+                    <label>Alvo de Poupança (R$)</label>
+                    <input type="number" id="meta-input" placeholder="Ex: 1000" min="0" step="10">
+                </div>
+            </div>
+
+            <!-- CORREÇÃO DA ESTRUTURA: Blocos isolados verticalmente para evitar sobreposições e quebras -->
+            <div class="history-section">
                 <h3>Gestão do Banco de Dados</h3>
                 
-                <!-- NOVO: Link para Baixar o Modelo Oficial -->
-                <button type="button" id="btn-download-template" class="btn-submit" style="background: #64748b; margin-bottom: 12px; padding: 10px; font-size: 13px;">
-                    📥 Baixar Planilha Modelo
+                <button type="button" id="btn-export-pdf" class="btn-submit btn-pdf">
+                    📄 Exportar Relatório PDF
                 </button>
-
-                <div class="form-group">
-                    <label style="font-size: 10px; margin-bottom: 4px;">Importar Planilha (.csv):</label>
-                    <input type="file" id="excel-import" accept=".csv" style="padding: 6px; font-size: 12px; cursor: pointer;">
+                
+                <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                    <label style="font-size: 11px; margin-bottom: 6px;">Importar Planilha (.csv):</label>
+                    <input type="file" id="excel-import" accept=".csv">
+                    <div class="template-link-wrapper">
+                        Precisa do padrão? <a href="#" id="btn-download-template" class="minimal-link">📥 Baixar Planilha Modelo</a>
+                    </div>
                 </div>
                 
-                <!-- Botão de Limpeza Completa -->
-                <button type="button" id="btn-clear-db" class="btn-submit" style="background: var(--rose); margin-top: 5px; padding: 10px; font-size: 13px;">
-                    🗑️ Limpar Todo o Histórico
+                <button type="button" id="btn-clear-db" class="btn-submit btn-clear">
+                    🗑️ Limpar Banco de Dados
                 </button>
             </div>
 
             <div class="history-section">
                 <h3>Extrato Consolidado do Mês</h3>
-                <div id="transaction-list" class="transaction-list">
-                    <!-- Injetado dinamicamente -->
-                </div>
+                <div id="transaction-list" class="transaction-list"></div>
             </div>
         </section>
 
-        <!-- Central de Inteligência de Negócios (Dashboard BI) -->
         <section class="dashboard-content">
-            <!-- KPIs Estratégicos -->
             <div class="kpi-grid">
-                <div class="card kpi-card">
+                <div class="card kpi-card kpi-receitas-top">
                     <span class="kpi-title">Faturamento Bruto</span>
                     <p id="kpi-receitas" class="kpi-value text-emerald">R$ 0,00</p>
                 </div>
-                <div class="card kpi-card">
+                <div class="card kpi-card kpi-despesas-top">
                     <span class="kpi-title">Custo Operacional Total</span>
                     <p id="kpi-despesas" class="kpi-value text-rose">R$ 0,00</p>
                 </div>
-                <div class="card kpi-card">
+                <div class="card kpi-card kpi-saldo-top">
                     <span class="kpi-title">Margem / Resultado Líquido</span>
                     <p id="kpi-saldo" class="kpi-value">R$ 0,00</p>
                 </div>
             </div>
 
-            <!-- Dashboard de Análise Visual (BI Offline) -->
             <div class="chart-grid">
-                <!-- Gráfico 1: Distribuição por Centro de Custo -->
                 <div class="card chart-card">
                     <h3>Centro de Custos (Despesas)</h3>
                     <p class="chart-subtitle">Rateio percentual e volumétrico por categoria</p>
-                    <div id="category-bars" class="category-bars-container">
-                        <!-- Barras dinâmicas em CSS -->
-                    </div>
+                    <div id="category-bars" class="category-bars-container"></div>
                 </div>
 
-                <!-- Gráfico 2: Balanço Global Mensal -->
                 <div class="card chart-card">
                     <h3>Balanço Patrimonial</h3>
                     <p class="chart-subtitle">Proporção estrutural entre Entradas e Saídas</p>
                     <div class="bi-progress-wrapper">
                         <div class="bi-progress-labels">
-                            <span>Receitas Consolidadas</span>
-                            <span id="progresso-receitas-val">0%</span>
+                            <span class="chart-text-bold">Receitas Consolidadas</span>
+                            <span id="progresso-receitas-val" class="chart-text-bold">0%</span>
                         </div>
                         <div class="progress-bar-bg">
                             <div id="progresso-receitas" class="progress-bar-fill bg-emerald"></div>
                         </div>
                         
-                        <div class="bi-progress-labels" style="margin-top: 20px;">
-                            <span>Despesas Consolidadas</span>
-                            <span id="progresso-despesas-val">0%</span>
+                        <div class="bi-progress-labels" style="margin-top: 24px;">
+                            <span class="chart-text-bold">Despesas Consolidadas</span>
+                            <span id="progresso-despesas-val" class="chart-text-bold">0%</span>
                         </div>
                         <div class="progress-bar-bg">
                             <div id="progresso-despesas" class="progress-bar-fill bg-rose"></div>
@@ -154,25 +168,33 @@
                 </div>
             </div>
 
-            <!-- Gráfico 3: Histórico Comparativo entre Meses -->
-            <div class="card chart-card">
-                <h3>Análise Temporal Macroeconômica</h3>
-                <p class="chart-subtitle">Evolução do Saldo Acumulado Mês a Mês (Dados Guardados)</p>
-                <div id="timeline-chart" class="timeline-container">
-                    <!-- Colunas de comparação temporal via CSS -->
+            <div class="card chart-card" id="meta-chart-card" style="display: none;">
+                <h3>Monitoramento do Alvo de Economia</h3>
+                <p class="chart-subtitle">Progresso em relação ao saldo atual versus a meta estipulada</p>
+                <div class="bi-progress-wrapper">
+                    <div class="bi-progress-labels">
+                        <span id="meta-status-text" class="chart-text-bold">Progresso da Meta</span>
+                        <span id="meta-progress-val" class="chart-text-bold">0%</span>
+                    </div>
+                    <div class="progress-bar-bg" style="height: 22px; border-radius: 11px;">
+                        <div id="meta-progress-bar" class="progress-bar-fill bg-emerald" style="height: 100%;"></div>
+                    </div>
                 </div>
             </div>
 
-                        <!-- Painel Decisório de BI -->
+            <div class="card chart-card">
+                <h3>Análise Temporal Macroeconômica</h3>
+                <p class="chart-subtitle">Evolução do Saldo Acumulado Mês a Mês (Dados Guardados)</p>
+                <div id="timeline-chart" class="timeline-container"></div>
+            </div>
+
             <div class="card insight-card">
                 <h3>💡 Diagnóstico do Consultor Corporativo</h3>
-                <p id="bi-insight">Aguardando inserção de dados para rodar modelos matemáticos preditivos...</p>
+                <p id="bi-insight">Aguardando inserção de dados para rodar modelos matemáticos...</p>
             </div>
         </section>
     </main>
 
-    <!-- GARANTA QUE O SEU HTML TERMINE APENAS COM ESTAS LINHAS ABAIXO -->
-    <!-- Apague qualquer outro código JavaScript ou funções antigas que estejam aqui -->
     <script src="bi-engine.js"></script>
     <script src="script.js"></script>
 </body>
