@@ -1,83 +1,70 @@
-# 📊 FinançasPro BI
+# 📊 FinançasPro BI — Dashboard Orçamentário Premium
 
-O **FinançasPro BI** é um simulador de orçamento pessoal e painel de Business Intelligence (BI) de alta performance, projetado para rodar de forma 100% local, privada e offline. A aplicação transforma lançamentos financeiros brutos ou planilhas importadas do Excel em dashboards visuais e insights estratégicos em tempo real.
+O **FinançasPro BI** é um simulador de orçamento pessoal e painel de Business Intelligence (BI) de alta performance. Desenvolvido com uma interface moderna e minimalista (*Slate UI / Dark Mode*), o sistema foi projetado para rodar de forma 100% local, privada e offline. 
+
+A aplicação transforma lançamentos manuais ou planilhas importadas do Excel em dashboards gráficos altamente responsivos e relatórios gerenciais prontos para tomada de decisões.
 
 ---
 
-## 🚀 Principais Funcionalidades
+## 🚀 Funcionalidades de Engenharia e Analytics
 
-- **Dashboard BI Nativo**: Gráficos construídos puramente em HTML5/CSS3 para máxima velocidade de renderização, sem dependências de bibliotecas pesadas de internet.
-- **Análise Temporal Macroeconômica**: Gráfico de colunas que plota a evolução do seu saldo acumulado mês a mês.
-- **Centro de Custos por Categoria**: Gráfico de barras horizontais com cálculo volumétrico e percentual de gastos por tipo (Moradia, Alimentação, Transporte, Lazer, Trabalho e Outros).
-- **Importador Inteligente Excel/CSV**: Mecanismo com tolerância a falhas que limpa aspas, símbolos monetários (`R$`) e espaços invisíveis gerados pelo Excel.
-- **Sincronização por Substituição**: Atualizações de planilha substituem os dados antigos do mês selecionado, evitando duplicidade de registros.
-- **Gestão de Dados Local e Segura**: Os dados financeiros nunca saem do seu computador. Tudo é armazenado diretamente no cache do seu navegador através do `localStorage`.
+- **Interface SaaS Premium**: Design imersivo em modo escuro com alto contraste e tipografia expressiva de BI, otimizado para longas sessões de análise visual.
+- **Layout Simétrico e Responsivo**: Estrutura inteligente em Grid que se centraliza perfeitamente em monitores ultrawide, notebooks e se adapta de forma fluida a smartphones e tablets.
+- **Análise Temporal Macroeconômica**: Gráfico de colunas que plota a evolução do saldo líquido acumulado mês a mês, identificando superávits (verde) ou déficits (vermelho) de forma reativa.
+- **Rateio por Centro de Custos**: Gráfico dinâmico que calcula o volume financeiro e o percentual exato consumido por cada tipo de despesa, ignorando as receitas para gerar um cálculo de despesa puro.
+- **Monitoramento de Alvos (Metas)**: Componente inteligente que monitora o progresso de economia atual contra uma meta estipulada para o período, exibindo barras cromáticas reativas de sucesso.
+- **Importador Blindado (Excel/CSV)**: Mecanismo de higienização de strings que aceita separadores por vírgula ou ponto e vírgula, trata plurais automaticamente, remove caracteres ocultos do Excel e limpa o símbolo de `R$`.
+- **Sincronização por Substituição**: Evita a duplicidade indesejada de registros. Ao carregar um novo arquivo, os dados anteriores do período selecionado são totalmente atualizados.
+- **Relatório Executivo PDF**: Engine embarcada via CSS (`@media print`) que, ao clicar em exportar, oculta o lixo visual de formulários/botões e reestrutura os dados analíticos de forma limpa em uma única folha A4 vertical.
+- **PWA (Progressive Web App)**: Homologada pelos critérios de instalação do Google Chrome e iOS, permitindo fixar o painel como um aplicativo nativo no computador ou na tela inicial do celular.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5**: Estruturação semântica da aplicação.
-- **CSS3 Nativo**: Design moderno, responsivo e animações fluidas de interface.
-- **JavaScript (ES6+)**: Motor lógico estruturado de forma modular:
-  - `script.js`: Manipulação do banco de dados local, formulários e importação de arquivos.
-  - `bi-engine.js`: Cálculos estatísticos, renderização dos gráficos e geração de insights analíticos.
+- **HTML5**: Estruturação semântica adaptada para leitores offline.
+- **CSS3 Nativo**: Grid Layout, Flexbox, variáveis nativas e estilização para mídias de impressão (`@media print`).
+- **JavaScript (ES6+)**: Dividido de forma modular e limpa para evitar cortes de código:
+  - `script.js`: Gerenciamento do banco de dados local, validação de arquivos CSV e eventos de formulário.
+  - `bi-engine.js`: Cálculos matemáticos de BI, motor reativo de gráficos nativos e geração de diagnósticos automatizados.
 
 ---
 
-## 💻 Como Executar o Projeto
+## 📖 Guia de Operação da Ferramenta
 
-Como o projeto foi projetado com arquitetura offline e sem dependências externas, para rodá-lo basta:
+### 1. Seleção de Período Cronológico
+No canto superior direito, use o seletor **Período de Análise** para escolher o mês de referência. Todas as bases de dados do sistema trabalham de forma isolada e independente mês a mês.
 
-1. Fazer o download ou clonar este repositório.
-2. Abrir a pasta do projeto.
-3. Dar um duplo clique no arquivo `index.html` para abrir diretamente no seu navegador de preferência.
+### 2. Importação Automatizada via Excel
+1. Clique no link discreto **`📥 Baixar Planilha Modelo`** localizado na barra lateral esquerda.
+2. Abra o arquivo baixado no seu Excel ou Google Sheets e preencha as linhas com os seus dados financeiros.
+3. No painel, clique em **Escolher arquivo** e selecione o seu documento salvo em formato `.csv`.
+4. O Dashboard recalculará e renderizará todas as visões gráficas instantaneamente.
 
----
-
-## 📖 Manual de Uso e Operação
-
-### 1. Seleção de Período
-No topo direito do painel, utilize o campo **Período de Análise** para escolher o mês que deseja visualizar ou gerenciar. Os dados de cada mês são mantidos de forma totalmente isolada e independente.
-
-### 2. Lançamento Manual de Dados
-Utilize o formulário lateral **"Novos Lançamentos"**:
-1. Escolha se a movimentação é uma **Receita** (Entrada) ou **Despesa** (Saída).
-2. Digite a descrição do item (Ex: *Salário, Aluguel, Mercado*).
-3. Insira o valor nominal e escolha a categoria correspondente.
-4. Clique em **"Registrar no Banco de Dados"**.
-
-### 3. Importação via Planilha do Excel
-Para carregar dados em massa de forma automatizada:
-1. Clique no botão cinza **`📥 Baixar Planilha Modelo`** na barra lateral para salvar o arquivo de exemplo.
-2. Abra este arquivo no seu Excel e preencha com seus dados reais seguindo a estrutura padrão.
-3. No painel, clique em **Escolher arquivo** dentro da seção de importação e selecione a sua planilha salva em formato `.csv`.
-4. O sistema irá limpar os dados antigos do mês selecionado e injetar as novas informações instantaneamente.
+### 3. Emissão de Relatório Analítico
+Clique no botão azul **`📄 Exportar Relatório PDF`**. O assistente de impressão do seu sistema operacional se abrirá de forma integrada, pronto para salvar o seu resumo financeiro em formato PDF perfeitamente diagramado para uma única página A4.
 
 ---
 
-## 📋 Estrutura Padrão da Planilha (.csv)
+## 📋 Modelo de Estrutura da Planilha (.csv)
 
-Para que o importador processe as informações com sucesso, o arquivo deve conter exatamente **4 colunas** e seguir a ordem abaixo:
+A planilha deve conter exatamente **4 colunas**, respeitando rigorosamente a ordem abaixo para evitar deslocamentos de dados:
 
 
 | tipo | descricao | valor | categoria |
 | :--- | :--- | :--- | :--- |
-| receita | Faturamento de Vendas | 8500,00 | Trabalho |
-| despesa | Aluguel Comercial | 1500,00 | Moradia |
-| despesa | Compras Supermercado | 450,00 | Alimentação |
+| receita | Faturamento Mensal | 4000,00 | Trabalho |
+| despesa | Aluguel Residencial | 1500,00 | Moradia |
+| despesa | Rancho Supermercado | 450,50 | Alimentação |
+| despesa | Parcela do Carro | 1200,00 | Transporte |
 
-### ⚠️ Regras Cruciais de Preenchimento:
-- **Coluna `tipo`**: Preencha apenas com `receita` ou `despesa` (em letras minúsculas).
-- **Coluna `valor`**: Insira apenas os números puros. O sistema limpa automaticamente o símbolo `R$`.
-- **Coluna `categoria`**: Use preferencialmente os termos: `Trabalho`, `Moradia`, `Alimentação`, `Transporte`, `Lazer` ou `Outros`. (O importador possui mapeamento inteligente e converterá palavras como *'mercado'* ou *'carro'* automaticamente para as categorias oficiais).
-- **Formato de Salvamento**: Ao finalizar no Excel, clique em **Salvar Como** e selecione o formato **CSV (Separado por vírgulas) (*.csv)**.
-
----
-
-## 🗑️ Limpeza e Reset do Sistema
-
-Caso deseje apagar todo o histórico financeiro do navegador para reiniciar a sua contabilidade, utilize o botão vermelho **`🗑️ Limpar Todo o Histórico`**. Por segurança, o sistema exibirá uma caixa de confirmação dupla para evitar a exclusão acidental dos seus dados.
+### ⚠️ Diretrizes Obrigatórias para Preenchimento:
+- **Coluna Tipo**: Use os termos `receita` ou `despesa` (o sistema aceita variações no plural como `receitas` ou `despesas`).
+- **Coluna Valor**: Insira apenas os numéricos puros (use vírgula ou ponto para centavos). Não digite o texto `R$` dentro da célula.
+- **Mapeamento de Categoria**: Use os termos de centro de custos: `Trabalho`, `Moradia`, `Alimentação`, `Transporte`, `Lazer` ou `Outros`.
+- *Nota: O importador possui inteligência cruzada. Se você escrever "combustível" na descrição e esquecer de definir a categoria, o robô remapeia automaticamente para a barra de **Transporte**.*
 
 ---
-Desenvolvido focado em performance ágil e Business Intelligence Privado. 🚀
+
+## 🔒 Segurança e Privacidade de Dados
+Por motivos de governança e privacidade, **nenhum dado financeiro inserido nesta ferramenta é enviado para servidores externos ou armazenado em nuvem**. Toda a persistência é criptografada e mantida de forma individual e local no disco rígido do seu próprio navegador através da API `localStorage`. O sistema funciona de forma 100% anônima e isolada por dispositivo.
