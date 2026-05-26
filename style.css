@@ -1,4 +1,3 @@
-/* Definições de Identidade Visual Corporativa e Performance Local */
 :root {
     --bg-main: #f1f5f9;
     --text-main: #334155;
@@ -29,7 +28,7 @@ body {
     padding: 0 20px;
 }
 
-/* Header e Seletor Temporal */
+/* Header */
 .main-header {
     background: #0f172a;
     color: white;
@@ -86,7 +85,7 @@ body {
     cursor: pointer;
 }
 
-/* Layout da Grid */
+/* Grid layout */
 .main-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -99,7 +98,7 @@ body {
     }
 }
 
-/* Cards Estruturais */
+/* Cards */
 .card {
     background: white;
     border: 1px solid var(--card-border);
@@ -118,12 +117,15 @@ h2 {
 }
 
 h3 {
-    font-size: 15px;
-    color: #1e293b;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
     font-weight: 700;
 }
 
-/* Formulários Avançados */
+/* Formulários */
 .form-group {
     margin-bottom: 16px;
 }
@@ -148,7 +150,6 @@ h3 {
     font-size: 14px;
     color: #1e293b;
     outline: none;
-    transition: all 0.15s;
 }
 
 .form-group input:focus,
@@ -167,7 +168,6 @@ h3 {
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
     font-size: 14px;
 }
 
@@ -175,28 +175,52 @@ h3 {
     background: var(--primary-hover);
 }
 
-/* Extrato de Transações */
+/* Importação Módulo */
+.import-section {
+    margin-top: 20px;
+    border-top: 1px dashed var(--card-border);
+    padding-top: 20px;
+}
+
+.btn-import-label {
+    display: block;
+    text-align: center;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-import-label:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.import-help {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: center;
+    margin-top: 6px;
+}
+
+/* Extratos */
 .history-section {
-    margin-top: 25px;
+    margin-top: 20px;
     border-top: 1px solid var(--card-border);
     padding-top: 20px;
 }
 
-.history-section h3 {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #64748b;
-    margin-bottom: 15px;
-    letter-spacing: 0.5px;
-}
-
 .transaction-list {
-    max-height: 280px;
+    max-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-right: 4px;
 }
 
 .empty-text {
@@ -211,11 +235,11 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 10px;
     background: #f8fafc;
     border-radius: 10px;
     border-left: 4px solid #cbd5e1;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .t-item.receita {
@@ -239,7 +263,6 @@ h3 {
     font-size: 10px;
     text-transform: uppercase;
     color: #64748b;
-    font-weight: 500;
 }
 
 .t-amount-wrapper {
@@ -254,15 +277,13 @@ h3 {
     color: #cbd5e1;
     cursor: pointer;
     font-size: 12px;
-    padding: 4px;
-    transition: color 0.15s;
 }
 
 .btn-del:hover {
     color: var(--rose);
 }
 
-/* Seção de BI */
+/* Dashboard BI */
 .dashboard-content {
     display: flex;
     flex-direction: column;
@@ -299,7 +320,6 @@ h3 {
     text-transform: uppercase;
     font-weight: 700;
     color: #64748b;
-    letter-spacing: 0.5px;
 }
 
 .kpi-value {
@@ -307,10 +327,17 @@ h3 {
     font-weight: 800;
     margin-top: 6px;
     color: #0f172a;
-    letter-spacing: -0.5px;
 }
 
-/* Gráficos em CSS Puro */
+.text-emerald {
+    color: var(--emerald) !important;
+}
+
+.text-rose {
+    color: var(--rose) !important;
+}
+
+/* Gráficos Estruturais */
 .chart-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -353,14 +380,16 @@ h3 {
 .progress-bar-fill {
     height: 100%;
     width: 0%;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.5s ease-out;
 }
 
-/* Barras Dinâmicas de Categorias */
+/* Barras Dinâmicas */
 .category-bars-container {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    max-height: 280px;
+    overflow-y: auto;
 }
 
 .cat-bar-item {
@@ -385,10 +414,14 @@ h3 {
     background: var(--primary);
     height: 100%;
     width: 0%;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.5s ease-out;
 }
 
-/* NOVO: Histórico Cronológico Gráfico (Barras Verticais CSS) */
+.cat-bar-fill.bg-micro {
+    background: #64748b;
+}
+
+/* Histórico Temporal */
 .timeline-container {
     display: flex;
     justify-content: space-between;
@@ -409,7 +442,6 @@ h3 {
     height: 100%;
     justify-content: flex-end;
     font-size: 10px;
-    font-weight: 600;
     color: #64748b;
 }
 
@@ -427,8 +459,7 @@ h3 {
     min-height: 4px;
     background: #94a3b8;
     border-radius: 4px 4px 0 0;
-    transition: height 0.5s ease-out, background 0.3s;
-    position: relative;
+    transition: height 0.5s ease-out;
 }
 
 .timeline-bar.positive {
@@ -441,10 +472,8 @@ h3 {
 
 .timeline-label {
     margin-top: 8px;
-    text-transform: uppercase;
     font-size: 9px;
-    text-align: center;
-    white-space: nowrap;
+    text-transform: uppercase;
 }
 
 .timeline-popover {
@@ -457,7 +486,7 @@ h3 {
     font-size: 9px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.15s;
+    transition: opacity 0.1s;
     white-space: nowrap;
     z-index: 10;
 }
@@ -466,20 +495,17 @@ h3 {
     opacity: 1;
 }
 
-/* Módulo de Diagnóstico */
+/* Diagnósticos */
 .insight-card {
     background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
     color: white;
     border: none;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .insight-card h3 {
     color: #c7d2fe;
     font-size: 12px;
-    text-transform: uppercase;
     margin-bottom: 10px;
-    letter-spacing: 0.5px;
 }
 
 .insight-card p {

@@ -1,7 +1,6 @@
-// Banco de Dados Local Otimizado (Mês a Mês usando LocalStorage)
+// BANCO DE DADOS LOCAL E MAPEAMENTOS DO DOM
 let currentMonth = document.getElementById('month-selector').value;
 
-// Mapeamentos do DOM
 const form = document.getElementById('finance-form');
 const transactionList = document.getElementById('transaction-list');
 const monthSelector = document.getElementById('month-selector');
@@ -15,149 +14,99 @@ const progressoReceitasVal = document.getElementById('progresso-receitas-val');
 const progressoDespesasVal = document.getElementById('progresso-despesas-val');
 const categoryBarsContainer = document.getElementById('category-bars');
 const timelineChart = document.getElementById('timeline-chart');
+const fileInput = document.getElementById('excel-import');
+const btnClearDB = document.getElementById('btn-clear-db');
+const btnDownloadTemplate = document.getElementById('btn-download-template');
 
-// Carrega os dados salvos do mês selecionado
+// FUNÇÕES DE PERSISTÊNCIA DE DADOS
 function getTransactionsFromStorage(month) {
     const data = localStorage.getItem(`financas_pro_${month}`);
     return data ? JSON.parse(data) : [];
 }
 
-// Salva os dados no armazenamento interno do navegador
 function saveTransactionsToStorage(month, list) {
     localStorage.setItem(`financas_pro_${month}`, JSON.stringify(list));
 }
 
-// Formatação Monetária Padrão BR
-const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-
-// Atualização Completa da Camada Visual e Motores de BI
-function updateUI() {
-    const activeTransactions = getTransactionsFromStorage(currentMonth);
-    
-    // Cálculos de KPI Dinâmicos
-    const receitas = activeTransactions.filter(t => t.type === 'receita').reduce((sum, t) => sum + t.amount, 0);
-    const despesas = activeTransactions.filter(t => t.type === 'despesa').reduce((sum, t) => sum + t.amount, 0);
-    const saldo = receitas - despesas;
-
-    // 1. Renderização dos Indicadores (KPIs)
-    kpiReceitas.textContent = formatCurrency(receitas);
-    kpiDespesas.textContent = formatCurrency(despesas);
-    kpiSaldo.textContent = formatCurrency(saldo);
-
-    if (saldo < 0) kpiSaldo.className = "kpi-value text-rose";
-    else if (saldo > 0) kpiSaldo.className = "kpi-value text-emerald";
-    else kpiSaldo.className = "kpi-value";
-
-    // 2. Renderização do Extrato do Mês Atual
-    if (activeTransactions.length === 0) {
-        transactionList.innerHTML = `<p class="empty-text">Nenhum registro para este período.</p>`;
-    } else {
-        transactionList.innerHTML = activeTransactions.map((t, index) => `
-            <div class="t-item ${t.type}">
-                <div class="t-info">
-                    <p title="${t.description}">${t.description}</p>
-                    <span>${t.category}</span>
-                </div>
-                <div class="t-amount-wrapper">
-                    <span class="${t.type === 'receita' ? 'text-emerald' : 'text-rose'}" style="font-weight:700">
-                        ${t.type === 'receita' ? '+' : '-'} ${formatCurrency(t.amount)}
-                    </span>
-                    <button onclick="removeTransaction(${index})" class="btn-del" title="Excluir">✕</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // 3. Gráfico de Balanço Estrutural Global (Proporção)
-    const totalMovimentado = receitas + despesas;
-    const pctReceitas = totalMovimentado > 0 ? ((receitas / totalMovimentado) * 100).toFixed(0) : 0;
-    const pctDespesas = totalMovimentado > 0 ? ((despesas / totalMovimentado) * 100).toFixed(0) : 0;
-
-    progressoReceitas.style.width = `${pctReceitas}%`;
-    progressoDespesas.style.width = `${pctDespesas}%`;
-    progressoReceitasVal.textContent = `${pctReceitas}%`;
-    progressoDespesasVal.textContent = `${pctDespesas}%`;
-
-    // 4. Gráfico Analítico de Custos por Categoria
-    const categories = ['Trabalho', 'Moradia', 'Alimentação', 'Transporte', 'Lazer', 'Outros'];
-    if (despesas === 0) {
-        categoryBarsContainer.innerHTML = `<p class="empty-text" style="font-size:12px; padding:10px 0;">Sem despesas mapeadas neste período.</p>`;
-    } else {
-        categoryBarsContainer.innerHTML = categories.map(cat => {
-            const valorCat = activeTransactions.filter(t => t.type === 'despesa' && t.category === cat).reduce((sum, t) => sum + t.amount, 0);
-            const pctCat = ((valorCat / despesas) * 100).toFixed(0);
-            return `
-                <div class="cat-bar-item">
-                    <div class="cat-bar-header">
-                        <span style="color:#475569; font-weight:600;">${cat}</span>
-                        <span style="color:#1e293b; font-weight:700;">${pctCat}% (${formatCurrency(valorCat)})</span>
-                    </div>
-                    <div class="cat-bar-track">
-                        <div class="cat-bar-fill" style="width: ${pctCat}%"></div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    // 5. ATUALIZAÇÃO DO GRÁFICO HISTÓRICO COMPARATIVO MÊS A MÊS
-    renderTimelineChart();
-
-    // 6. Motor de Geração de Insights de Negócio
-    generateInsights(receitas, despesas, saldo);
+// LIMPEZA ABSOLUTA DE CARACTERES DO EXCEL
+function cleanExcelText(text) {
+    if (!text) return "";
+    return text.trim().replace(/^["']|["']$/g, '').trim();
 }
 
-// Renderização das colunas temporais de BI coletando os dados do LocalStorage
-function renderTimelineChart() {
-    const allMonths = Array.from(monthSelector.options).map(opt => ({ value: opt.value, text: opt.text.split(' /')[0] }));
-    
-    // Coleta o saldo de todos os meses para normalizar a altura gráfica
-    const monthlySaldos = allMonths.map(m => {
-        const transationsList = getTransactionsFromStorage(m.value);
-        const rec = transationsList.filter(t => t.type === 'receita').reduce((sum, t) => sum + t.amount, 0);
-        const desp = transationsList.filter(t => t.type === 'despesa').reduce((sum, t) => sum + t.amount, 0);
-        return { monthValue: m.value, label: m.text, saldo: rec - desp };
+function normalizeCategoryText(text) {
+    return cleanExcelText(text)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+}
+
+// IMPORTADOR BLINDADO CONTRA FORMATOS DO EXCEL
+if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const text = event.target.result;
+            const lines = text.split(/\r?\n/);
+            const importedTransactions = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const currentLine = lines[i].trim();
+                if (!currentLine) continue;
+
+                let columns = currentLine.includes(';') ? currentLine.split(';') : currentLine.split(',');
+
+                if (columns.length >= 4) {
+                    const rawType = cleanExcelText(columns[0]);
+                    const description = cleanExcelText(columns[1]);
+                    const rawAmount = cleanExcelText(columns[2]);
+                    const rawCategory = cleanExcelText(columns[3]);
+
+                    const cleanType = rawType.trim().toLowerCase();
+                    const type = (cleanType === 'despesa' || cleanType === 'saida' || cleanType === 'saída') ? 'despesa' : 'receita';
+
+                    let amountStr = rawAmount.replace('R$', '').replace(/\s/g, '');
+                    if (amountStr.includes(',') && amountStr.includes('.')) {
+                        amountStr = amountStr.replace(/\./g, '').replace(',', '.');
+                    } else if (amountStr.includes(',')) {
+                        amountStr = amountStr.replace(',', '.');
+                    }
+                    const amount = parseFloat(amountStr);
+
+                    if (description && !isNaN(amount)) {
+                        let category = "Outros";
+                        const normCat = normalizeCategoryText(rawCategory);
+
+                        if (normCat.includes("trabalho") || normCat.includes("negocio") || normCat.includes("salario")) category = "Trabalho";
+                        else if (normCat.includes("moradia") || normCat.includes("aluguel") || normCat.includes("luz") || normCat.includes("casa")) category = "Moradia";
+                        else if (normCat.includes("alimentacao") || normCat.includes("mercado") || normCat.includes("comida")) category = "Alimentação";
+                        else if (normCat.includes("transporte") || normCat.includes("carro") || normCat.includes("combustivel") || normCat.includes("posto")) category = "Transporte";
+                        else if (normCat.includes("lazer") || normCat.includes("viagem") || normCat.includes("cultura") || normCat.includes("show")) category = "Lazer";
+
+                        importedTransactions.push({ type, description, amount, category });
+                    }
+                }
+            }
+
+            if (importedTransactions.length > 0) {
+                saveTransactionsToStorage(currentMonth, importedTransactions);
+                updateUI();
+                alert(`Sucesso! ${importedTransactions.length} lançamentos processados e sincronizados para o mês atual.`);
+            } else {
+                alert('Erro crítico: O formato do arquivo está incorreto.\n\nVerifique se o seu arquivo possui exatamente as colunas:\ntipo, descricao, valor, categoria');
+            }
+            fileInput.value = '';
+        };
+        
+        reader.readAsText(file, 'UTF-8');
     });
-
-    const maxAbsoluteSaldo = Math.max(...monthlySaldos.map(m => Math.abs(m.saldo)), 100);
-
-    timelineChart.innerHTML = monthlySaldos.map(m => {
-        // Calcula altura proporcional de forma segura até 100%
-        const heightPercentage = ((Math.abs(m.saldo) / maxAbsoluteSaldo) * 100).toFixed(0);
-        const barType = m.saldo >= 0 ? 'positive' : 'negative';
-        const isCurrent = m.monthValue === currentMonth ? 'border: 2px solid #4f46e5; box-shadow: 0 0 8px rgba(79, 70, 229, 0.4);' : '';
-
-        return `
-            <div class="timeline-column">
-                <div class="timeline-bar-wrapper">
-                    <div class="timeline-popover">Saldo: ${formatCurrency(m.saldo)}</div>
-                    <div class="timeline-bar ${barType}" style="height: ${Math.max(heightPercentage, 4)}%; ${isCurrent}"></div>
-                </div>
-                <div class="timeline-label" style="${m.monthValue === currentMonth ? 'color:#4f46e5; font-weight:800;' : ''}">${m.label}</div>
-            </div>
-        `;
-    }).join('');
 }
 
-// Regras de Negócio e Análise de Risco
-function generateInsights(receitas, despesas, saldo) {
-    const activeTransactions = getTransactionsFromStorage(currentMonth);
-    if (activeTransactions.length === 0) {
-        biInsight.textContent = "Alimente a planilha para rodar a análise automatizada de saúde financeira e comportamento de despesa.";
-        return;
-    }
-    const comprometido = receitas > 0 ? ((despesas / receitas) * 100).toFixed(1) : 100;
-
-    if (saldo < 0) {
-        biInsight.innerHTML = `⚠️ <strong>Déficit Operacional Recorrente:</strong> Suas despesas superaram suas receitas neste período. Você comprometeu <strong>${comprometido}%</strong> da sua receita. Alavanque novas fontes de receita ou contingencie custos nas maiores barras do gráfico de categorias.`;
-    } else if (comprometido > 75) {
-        biInsight.innerHTML = `⚠️ <strong>Alerta de Margem Estreita:</strong> Você está utilizando <strong>${comprometido}%</strong> dos seus ganhos com despesas operacionais. A sua liquidez livre para investimentos futuros ou caixa emergencial está perigosamente reduzida.`;
-    } else {
-        biInsight.innerHTML = `🎉 <strong>Geração de Valor Excelente:</strong> Parabéns! Você utilizou apenas <strong>${comprometido}%</strong> do capital disponível. O saldo livre de ${formatCurrency(saldo)} deve ser redirecionado como aporte estratégico em investimentos de longo prazo.`;
-    }
-}
-
-// Gerenciamento e Escuta de Eventos
+// CAPTURA DE LANÇAMENTO MANUAL
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -177,7 +126,7 @@ form.addEventListener('submit', (e) => {
     document.getElementById('description').focus();
 });
 
-// Remove item específico do armazenamento
+// EXCLUSÃO DE LANÇAMENTO PONTUAL
 function removeTransaction(index) {
     const currentList = getTransactionsFromStorage(currentMonth);
     currentList.splice(index, 1);
@@ -185,13 +134,67 @@ function removeTransaction(index) {
     updateUI();
 }
 
-// Troca de Mês no Seletor BI
+// SELEÇÃO DE PERÍODO CRONOLÓGICO (MÊS A MÊS)
 monthSelector.addEventListener('change', (e) => {
     currentMonth = e.target.value;
     updateUI();
 });
 
-// Boot inicial instantâneo 100% local
+// LÓGICA DE LIMPEZA COMPLETA DO BANCO DE DADOS
+if (btnClearDB) {
+    btnClearDB.addEventListener('click', () => {
+        const confirmacao = confirm(
+            "⚠️ ALERTA DE SEGURANÇA:\n\n" +
+            "Você tem certeza que deseja APAGAR DEFINITIVAMENTE todos os dados salvos de TODOS os meses?\n" +
+            "Esta ação apaga todo o histórico local e não pode ser desfeita."
+        );
+
+        if (confirmacao) {
+            const keysToRemove = [];
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('financas_pro_')) {
+                    keysToRemove.push(key);
+                }
+            }
+
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+
+            updateUI();
+            alert("Banco de dados resetado com sucesso! Todos os meses foram limpos.");
+        }
+    });
+}
+
+// LÓGICA DE DOWNLOAD AUTOMÁTICO DA PLANILHA MODELO (CORRIGIDA)
+if (btnDownloadTemplate) {
+    btnDownloadTemplate.addEventListener('click', () => {
+        // CORREÇÃO: O conteúdo abaixo foi perfeitamente isolado em String literal
+        const conteudoCSV = `tipo;descricao;valor;categoria
+receita;Faturamento de Vendas;8500,00;Trabalho
+receita;Rendimentos de Investimentos;450,00;Trabalho
+despesa;Aluguel do Escritorio;2200,00;Moradia
+despesa;Conta de Luz Corporativa;340,50;Moradia
+despesa;Suprimentos de Escritorio;620,00;Alimentação
+despesa;Almoco Comercial;180,00;Alimentação
+despesa;Combustivel da Frota;450,00;Transporte
+despesa;Manutencao Preventiva;320,00;Transporte
+despesa;Assinaturas de Softwares;150,00;Outros`;
+
+        const blob = new Blob([conteudoCSV], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "modelo_orcamento_bi.csv");
+        document.body.appendChild(link);
+        
+        link.click();
+        document.body.removeChild(link);
+    });
+}
+
+// START DA APLICAÇÃO LOCAL
 window.onload = () => {
     updateUI();
 };

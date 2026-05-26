@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orçamento Familiar</title>
+    <title>Simulador Orçamentário BI - Modo Offline</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,8 +11,8 @@
     <header class="main-header">
         <div class="container header-container">
             <div>
-                <h1>Orçamento Familiar</h1>
-                <p>Análise de Dados Orçamentários Familiar</p>
+                <h1>FinançasPro BI</h1>
+                <p>Análise de Dados Orçamentários Corporativos & Pessoais</p>
             </div>
             <!-- Controle de Período Cronológico (Mês a Mês) -->
             <div class="period-control">
@@ -72,6 +72,26 @@
 
                 <button type="submit" class="btn-submit">Registrar no Banco de Dados</button>
             </form>
+
+            <!-- Área de Importar Planilha Excel & Limpeza de Dados -->
+            <div class="history-section" style="margin-top: 15px; padding-top: 15px;">
+                <h3>Gestão do Banco de Dados</h3>
+                
+                <!-- NOVO: Link para Baixar o Modelo Oficial -->
+                <button type="button" id="btn-download-template" class="btn-submit" style="background: #64748b; margin-bottom: 12px; padding: 10px; font-size: 13px;">
+                    📥 Baixar Planilha Modelo
+                </button>
+
+                <div class="form-group">
+                    <label style="font-size: 10px; margin-bottom: 4px;">Importar Planilha (.csv):</label>
+                    <input type="file" id="excel-import" accept=".csv" style="padding: 6px; font-size: 12px; cursor: pointer;">
+                </div>
+                
+                <!-- Botão de Limpeza Completa -->
+                <button type="button" id="btn-clear-db" class="btn-submit" style="background: var(--rose); margin-top: 5px; padding: 10px; font-size: 13px;">
+                    🗑️ Limpar Todo o Histórico
+                </button>
+            </div>
 
             <div class="history-section">
                 <h3>Extrato Consolidado do Mês</h3>
@@ -134,7 +154,7 @@
                 </div>
             </div>
 
-            <!-- NOVO Gráfico 3: Histórico Comparativo entre Meses -->
+            <!-- Gráfico 3: Histórico Comparativo entre Meses -->
             <div class="card chart-card">
                 <h3>Análise Temporal Macroeconômica</h3>
                 <p class="chart-subtitle">Evolução do Saldo Acumulado Mês a Mês (Dados Guardados)</p>
@@ -143,7 +163,7 @@
                 </div>
             </div>
 
-            <!-- Painel Decisório de BI -->
+                        <!-- Painel Decisório de BI -->
             <div class="card insight-card">
                 <h3>💡 Diagnóstico do Consultor Corporativo</h3>
                 <p id="bi-insight">Aguardando inserção de dados para rodar modelos matemáticos preditivos...</p>
@@ -151,6 +171,9 @@
         </section>
     </main>
 
+    <!-- GARANTA QUE O SEU HTML TERMINE APENAS COM ESTAS LINHAS ABAIXO -->
+    <!-- Apague qualquer outro código JavaScript ou funções antigas que estejam aqui -->
+    <script src="bi-engine.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
