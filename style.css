@@ -1,6 +1,6 @@
-/* Design Moderno, Responsivo e Sem Dependências Externas */
+/* Definições de Identidade Visual Corporativa e Performance Local */
 :root {
-    --bg-main: #f8fafc;
+    --bg-main: #f1f5f9;
     --text-main: #334155;
     --primary: #4f46e5;
     --primary-hover: #4338ca;
@@ -17,24 +17,24 @@
 }
 
 body {
-    bg-color: var(--bg-main);
-    color: var(--text-main);
     background: var(--bg-main);
+    color: var(--text-main);
     min-height: 100vh;
+    padding-bottom: 40px;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* Header */
+/* Header e Seletor Temporal */
 .main-header {
-    background: var(--primary);
+    background: #0f172a;
     color: white;
-    padding: 20px 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 25px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
 }
 
@@ -43,48 +43,69 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
 }
 
 .main-header h1 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .main-header p {
-    color: #c7d2fe;
+    color: #94a3b8;
     font-size: 14px;
+    margin-top: 2px;
 }
 
-.badge {
-    background: #3730a3;
-    padding: 6px 12px;
-    rounded-radius: 9999px;
-    border-radius: 20px;
+.period-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e293b;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.period-control label {
     font-size: 12px;
+    color: #cbd5e1;
     font-weight: 500;
 }
 
-/* Grid Principal */
+.period-control select {
+    background: #0f172a;
+    color: white;
+    border: 1px solid #475569;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Layout da Grid */
 .main-layout {
     display: grid;
     grid-template-columns: 1fr;
     gap: 30px;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1024px) {
     .main-layout {
-        grid-template-columns: 350px 1fr;
+        grid-template-columns: 380px 1fr;
     }
 }
 
-/* Cards */
+/* Cards Estruturais */
 .card {
     background: white;
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
 h2 {
@@ -92,18 +113,25 @@ h2 {
     margin-bottom: 20px;
     color: #0f172a;
     border-bottom: 1px solid var(--card-border);
-    padding-bottom: 10px;
+    padding-bottom: 12px;
+    font-weight: 700;
 }
 
-/* Formulários */
+h3 {
+    font-size: 15px;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+/* Formulários Avançados */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
 .form-group label {
     display: block;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 6px;
@@ -112,40 +140,42 @@ h2 {
 
 .form-group input,
 .form-group select {
-    w-width: 100%;
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     border: 1px solid var(--card-border);
     border-radius: 8px;
     background: #f8fafc;
     font-size: 14px;
+    color: #1e293b;
     outline: none;
+    transition: all 0.15s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px #e0e7ff;
+    box-shadow: 0 0 0 3px #e0e7ff;
+    background: white;
 }
 
 .btn-submit {
-    w-width: 100%;
     width: 100%;
     background: var(--primary);
     color: white;
     border: none;
-    padding: 12px;
+    padding: 13px;
     border-radius: 8px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 14px;
 }
 
 .btn-submit:hover {
     background: var(--primary-hover);
 }
 
-/* Extrato */
+/* Extrato de Transações */
 .history-section {
     margin-top: 25px;
     border-top: 1px solid var(--card-border);
@@ -157,10 +187,11 @@ h2 {
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 15px;
+    letter-spacing: 0.5px;
 }
 
 .transaction-list {
-    max-height: 240px;
+    max-height: 280px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -173,16 +204,16 @@ h2 {
     font-size: 13px;
     text-align: center;
     font-style: italic;
-    padding: 15px 0;
+    padding: 20px 0;
 }
 
 .t-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
     background: #f8fafc;
-    border-radius: 8px;
+    border-radius: 10px;
     border-left: 4px solid #cbd5e1;
     font-size: 14px;
 }
@@ -196,20 +227,25 @@ h2 {
 }
 
 .t-info p {
-    font-weight: 500;
-    color: #334155;
+    font-weight: 600;
+    color: #1e293b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
 }
 
 .t-info span {
     font-size: 10px;
     text-transform: uppercase;
-    color: #94a3b8;
+    color: #64748b;
+    font-weight: 500;
 }
 
 .t-amount-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .btn-del {
@@ -217,64 +253,68 @@ h2 {
     border: none;
     color: #cbd5e1;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 12px;
     padding: 4px;
+    transition: color 0.15s;
 }
 
 .btn-del:hover {
     color: var(--rose);
 }
 
-/* Dashboard Área */
+/* Seção de BI */
 .dashboard-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
 }
 
 .kpi-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 16px;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 640px) {
     .kpi-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 .kpi-card {
-    padding: 20px;
+    padding: 22px;
+    border-left: 4px solid var(--primary);
+}
+
+.kpi-card:has(.text-emerald) {
+    border-left-color: var(--emerald);
+}
+
+.kpi-card:has(.text-rose) {
+    border-left-color: var(--rose);
 }
 
 .kpi-title {
     font-size: 11px;
     text-transform: uppercase;
-    font-weight: 600;
-    color: #94a3b8;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 0.5px;
 }
 
 .kpi-value {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 5px;
-    color: #1e293b;
+    font-size: 22px;
+    font-weight: 800;
+    margin-top: 6px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
 }
 
-.text-emerald {
-    color: var(--emerald) !important;
-}
-
-.text-rose {
-    color: var(--rose) !important;
-}
-
-/* Gráficos em CSS */
+/* Gráficos em CSS Puro */
 .chart-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 24px;
 }
 
 @media (min-width: 768px) {
@@ -285,26 +325,27 @@ h2 {
 
 .chart-subtitle {
     font-size: 12px;
-    color: #94a3b8;
-    margin-bottom: 20px;
+    color: #64748b;
+    margin-bottom: 22px;
 }
 
 .bi-progress-wrapper {
-    padding: 10px 0;
+    padding: 12px 0;
 }
 
 .bi-progress-labels {
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    margin-bottom: 6px;
-    font-weight: 500;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #475569;
 }
 
 .progress-bar-bg {
-    background: #f1f5f9;
-    height: 12px;
-    border-radius: 6px;
+    background: #e2e8f0;
+    height: 16px;
+    border-radius: 8px;
     overflow: hidden;
     width: 100%;
 }
@@ -312,22 +353,14 @@ h2 {
 .progress-bar-fill {
     height: 100%;
     width: 0%;
-    transition: width 0.4s ease-out;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.bg-emerald {
-    background: var(--emerald);
-}
-
-.bg-rose {
-    background: var(--rose);
-}
-
-/* Barras de Categoria */
+/* Barras Dinâmicas de Categorias */
 .category-bars-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .cat-bar-item {
@@ -337,13 +370,14 @@ h2 {
 .cat-bar-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
 .cat-bar-track {
-    background: #f1f5f9;
-    height: 8px;
-    border-radius: 4px;
+    background: #e2e8f0;
+    height: 10px;
+    border-radius: 5px;
     overflow: hidden;
 }
 
@@ -351,22 +385,100 @@ h2 {
     background: var(--primary);
     height: 100%;
     width: 0%;
-    transition: width 0.4s ease-out;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Insight Card */
+/* NOVO: Histórico Cronológico Gráfico (Barras Verticais CSS) */
+.timeline-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 160px;
+    padding: 15px 10px 0 10px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px dashed #cbd5e1;
+    gap: 4px;
+}
+
+.timeline-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    justify-content: flex-end;
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.timeline-bar-wrapper {
+    width: 100%;
+    height: 110px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+}
+
+.timeline-bar {
+    width: 65%;
+    min-height: 4px;
+    background: #94a3b8;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s ease-out, background 0.3s;
+    position: relative;
+}
+
+.timeline-bar.positive {
+    background: var(--emerald);
+}
+
+.timeline-bar.negative {
+    background: var(--rose);
+}
+
+.timeline-label {
+    margin-top: 8px;
+    text-transform: uppercase;
+    font-size: 9px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.timeline-popover {
+    position: absolute;
+    top: -28px;
+    background: #0f172a;
+    color: white;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.timeline-column:hover .timeline-popover {
+    opacity: 1;
+}
+
+/* Módulo de Diagnóstico */
 .insight-card {
-    background: linear-to-right, #0f172a, #1e1b4b;
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
     color: white;
     border: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .insight-card h3 {
-    color: #a5b4fc;
+    color: #c7d2fe;
     font-size: 12px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     letter-spacing: 0.5px;
 }
 
