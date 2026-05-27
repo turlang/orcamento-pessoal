@@ -7,8 +7,6 @@ const monthSelector = document.getElementById('month-selector');
 const kpiReceitas = document.getElementById('kpi-receitas');
 const kpiDespesas = document.getElementById('kpi-despesas');
 const kpiSaldo = document.getElementById('kpi-saldo');
-const kpiPrevisao = document.getElementById('kpi-previsao');
-const kpiGap = document.getElementById('kpi-gap');
 const biInsight = document.getElementById('bi-insight');
 const progressoReceitas = document.getElementById('progresso-receitas');
 const progressoDespesas = document.getElementById('progresso-despesas');
@@ -22,57 +20,25 @@ const btnDownloadTemplate = document.getElementById('btn-download-template');
 
 // FUNÇÕES DE PERSISTÊNCIA DE DADOS
 function getTransactionsFromStorage(month) {
-    try {
-        const data = localStorage.getItem(`financas_pro_${month}`);
-        return data ? JSON.parse(data) : [];
-    } catch (error) {
-        console.error('Erro ao ler banco local:', error);
-        return [];
-    }
+    const data = localStorage.getItem(`financas_pro_${month}`);
+    return data ? JSON.parse(data) : [];
 }
 
 function saveTransactionsToStorage(month, list) {
     localStorage.setItem(`financas_pro_${month}`, JSON.stringify(list));
 }
 
-function getMonthlyForecast(month) {
-    const value = parseFloat(localStorage.getItem(`previsao_receita_${month}`));
-    return Number.isFinite(value) ? value : 0;
-}
-
-function saveMonthlyForecast(month, value) {
-    if (!value || Number(value) <= 0) {
-        localStorage.removeItem(`previsao_receita_${month}`);
-        return;
-    }
-    localStorage.setItem(`previsao_receita_${month}`, value);
-}
-
-// LIMPEZA DE CARACTERES DO EXCEL
+// LIMPEZA ABSOLUTA DE CARACTERES DO EXCEL
 function cleanExcelText(text) {
     if (!text) return "";
-    return String(text).trim().replace(/^["']|["']$/g, '').trim();
+    return text.trim().replace(/^["']|["']$/g, '').trim();
 }
 
 function normalizeCategoryText(text) {
     return cleanExcelText(text).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-function mapCategory(rawCategory, description) {
-    const normCat = normalizeCategoryText(rawCategory);
-    const normDesc = normalizeCategoryText(description);
-    const content = `${normCat} ${normDesc}`;
-
-    if (content.match(/educacao|escola|faculdade|curso|cursos|livro|livros|apostila|material escolar|mensalidade|ead|aula|colegio/)) return "Educação";
-    if (content.match(/trabalho|negocio|negocios|salario|faturamento|vendas|comissao|graziela|ricardo/)) return "Trabalho";
-    if (content.match(/moradia|aluguel|condominio|luz|energia|agua|internet residencial|iptu/)) return "Moradia";
-    if (content.match(/alimentacao|mercado|supermercado|rancho|comida|almoco|jantar|ifood|restaurante/)) return "Alimentação";
-    if (content.match(/transporte|carro|combustivel|gasolina|uber|onibus|metro|seguro|manutencao|estacionamento/)) return "Transporte";
-    if (content.match(/lazer|viagem|futebol|show|cinema|streaming|netflix|passeio/)) return "Lazer";
-    return "Outros";
-}
-
-// IMPORTADOR CSV
+// IMPORTADOR BLINDADO CONTRA FORMATOS DO EXCEL (CORRIGIDO PARA PLURAIS E COLUNAS DESLOCADAS)
 if (fileInput) {
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -89,6 +55,8 @@ if (fileInput) {
                 if (!currentLine) continue;
 
                 let columns = currentLine.includes(';') ? currentLine.split(';') : currentLine.split(',');
+
+                // Remove colunas totalmente vazias do meio da linha para evitar deslocamentos do Excel
                 columns = columns.map(col => col.trim());
 
                 if (columns.length >= 4) {
@@ -97,20 +65,32 @@ if (fileInput) {
                     const rawAmount = cleanExcelText(columns[2]);
                     const rawCategory = cleanExcelText(columns[3]);
 
+                    // CORREÇÃO ESSENCIAL: Trata plurais ('despesas') e variações do Excel automaticamente
                     const cleanType = rawType.toLowerCase();
-                    const type = (cleanType.includes('despesa') || cleanType.includes('saida') || cleanType.includes('saída')) ? 'despesa' : 'receita';
+                    const type = (cleanType.includes('despesa') || cleanType.includes('saida')) ? 'despesa' : 'receita';
 
-                    let amountStr = rawAmount.replace(/R\$/gi, '').replace(/\s/g, '');
+                    // Limpa o valor financeiro eliminando R$, pontos de milhar, aspas e substitui vírgula por ponto
+                    let amountStr = rawAmount.replace('R$', '').replace(/\s/g, '');
                     if (amountStr.includes(',') && amountStr.includes('.')) {
                         amountStr = amountStr.replace(/\./g, '').replace(',', '.');
                     } else if (amountStr.includes(',')) {
                         amountStr = amountStr.replace(',', '.');
                     }
-
                     const amount = parseFloat(amountStr);
 
+                    // Mapeamento Inteligente e Tolerante a Erros de Categoria
                     if (description && !isNaN(amount)) {
-                        const category = mapCategory(rawCategory, description);
+                        let category = "Outros";
+                        const normCat = normalizeCategoryText(rawCategory);
+                        const normDesc = normalizeCategoryText(description);
+
+                        if (normCat.includes("trabalho") || normCat.includes("negocio") || normCat.includes("salario") || normDesc.includes("graziela") || normDesc.includes("ricardo")) category = "Trabalho";
+                        else if (normCat.includes("moradia") || normCat.includes("aluguel") || normCat.includes("luz") || normDesc.includes("aluguel") || normDesc.includes("luz")) category = "Moradia";
+                        else if (normCat.includes("alimentacao") || normCat.includes("mercado") || normDesc.includes("mercado") || normDesc.includes("rancho") || normDesc.includes("comida")) category = "Alimentação";
+                        else if (normCat.includes("transporte") || normCat.includes("carro") || normCat.includes("combustivel") || normDesc.includes("carro") || normDesc.includes("combustivel") || normDesc.includes("seguro") || normDesc.includes("gasolina")) category = "Transporte";
+                        else if (normCat.includes("lazer") || normCat.includes("viagem") || normDesc.includes("futebol") || normDesc.includes("internet") || normDesc.includes("internert") || normDesc.includes("show")) category = "Lazer";
+                        else if (normDesc.includes("inter") || normDesc.includes("elo") || normDesc.includes("cartao") || normDesc.includes("cartao") || normDesc.includes("emprestimo")) category = "Outros";
+
                         importedTransactions.push({ type, description, amount, category });
                     }
                 }
@@ -119,9 +99,9 @@ if (fileInput) {
             if (importedTransactions.length > 0) {
                 saveTransactionsToStorage(currentMonth, importedTransactions);
                 updateUI();
-                alert(`Sucesso! ${importedTransactions.length} lançamentos processados no Dashboard.`);
+                alert(`Sucesso! ${importedTransactions.length} lançamentos processados de forma correta no Dashboard.`);
             } else {
-                alert('Erro: o arquivo precisa conter as colunas: tipo, descricao, valor, categoria.');
+                alert('Erro crítico: O formato do arquivo está incorreto.\n\nVerifique se o seu arquivo possui exatamente as colunas:\ntipo, descricao, valor, categoria');
             }
             fileInput.value = '';
         };
@@ -132,20 +112,12 @@ if (fileInput) {
 // CAPTURA DE LANÇAMENTO MANUAL
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    const amount = parseFloat(document.getElementById('amount').value);
-    if (!Number.isFinite(amount) || amount <= 0) {
-        alert('Digite um valor válido maior que zero.');
-        return;
-    }
-
     const transaction = {
         type: document.getElementById('type').value,
-        description: cleanExcelText(document.getElementById('description').value),
-        amount,
+        description: document.getElementById('description').value,
+        amount: parseFloat(document.getElementById('amount').value),
         category: document.getElementById('category').value
     };
-
     const currentList = getTransactionsFromStorage(currentMonth);
     currentList.push(transaction);
     saveTransactionsToStorage(currentMonth, currentList);
@@ -162,36 +134,35 @@ function removeTransaction(index) {
     updateUI();
 }
 
-// SELEÇÃO DE PERÍODO
+// SELEÇÃO DE PERÍODO CRONOLÓGICO
 monthSelector.addEventListener('change', (e) => {
     currentMonth = e.target.value;
     updateUI();
 });
 
-// LIMPEZA COMPLETA DO BANCO
+// LÓGICA DE LIMPEZA COMPLETA DO BANCO DE DADOS
 if (btnClearDB) {
     btnClearDB.addEventListener('click', () => {
-        const confirmacao = confirm("Você tem certeza que deseja apagar definitivamente todos os dados salvos de todos os meses?");
+        const confirmacao = confirm("⚠️ ALERTA DE SEGURANÇA:\n\nVocê tem certeza que deseja APAGAR DEFINITIVAMENTE todos os dados salvos de TODOS os meses?\nEsta ação apaga todo o histórico local e não pode ser Emperor de volta.");
         if (confirmacao) {
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key && (key.startsWith('financas_pro_') || key.startsWith('meta_pro_') || key.startsWith('previsao_receita_'))) {
+                if (key && key.startsWith('financas_pro_')) {
                     keysToRemove.push(key);
                 }
             }
             keysToRemove.forEach(key => localStorage.removeItem(key));
             updateUI();
-            alert("Banco de dados resetado com sucesso.");
+            alert("Banco de dados resetado com sucesso! Todos os meses foram limpos.");
         }
     });
 }
 
-// DOWNLOAD DA PLANILHA MODELO
+// LÓGICA DE DOWNLOAD DA PLANILHA MODELO
 if (btnDownloadTemplate) {
-    btnDownloadTemplate.addEventListener('click', (event) => {
-        event.preventDefault();
-        const conteudoCSV = "tipo;descricao;valor;categoria\nreceita;Salario mensal;5000,00;Trabalho\nreceita;Renda extra;650,00;Trabalho\ndespesa;Aluguel residencial;1800,00;Moradia\ndespesa;Conta de luz;240,50;Moradia\ndespesa;Supermercado;720,00;Alimentação\ndespesa;Combustivel;350,00;Transporte\ndespesa;Curso de ingles;280,00;Educação\ndespesa;Livros e material escolar;160,00;Educação\ndespesa;Cinema e lazer;120,00;Lazer\ndespesa;Cartao de credito;450,00;Outros";
+    btnDownloadTemplate.addEventListener('click', () => {
+        const conteudoCSV = "tipo;descricao;valor;categoria\nreceita;Faturamento de Vendas;8500,00;Trabalho\nreceita;Rendimentos de Investimentos;450,00;Trabalho\ndespesa;Aluguel do Escritorio;2200,00;Moradia\ndespesa;Conta de Luz Corporativa;340,50;Moradia\ndespesa;Suprimentos de Escritorio;620,00;Alimentação\ndespesa;Almoco Comercial;180,00;Alimentação\ndespesa;Combustivel da Frota;450,00;Transporte\ndespesa;Manutencao Preventiva;320,00;Transporte\ndespesa;Assinaturas de Softwares;150,00;Outros";
         const blob = new Blob([conteudoCSV], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -199,11 +170,10 @@ if (btnDownloadTemplate) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
     });
 }
 
-// START
-window.addEventListener('load', () => {
+// START DA APLICAÇÃO LOCAL
+window.onload = () => {
     updateUI();
-});
+};

@@ -1,43 +1,35 @@
-const CACHE_NAME = 'financas-pro-v1';
-// Lista de arquivos locais que o app vai guardar na memória do dispositivo
+const CACHE_NAME = 'financas-pro-v2';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './script.js',
   './bi-engine.js',
-  './manifest.json'
+  './manifest.json',
+  './icon.svg'
 ];
 
-// Instala o Service Worker e guarda os arquivos no cache interno
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    })
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
+  self.skipWaiting();
 });
 
-// Ativa o SW e remove caches antigos se houverem atualizações
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => key !== CACHE_NAME ? caches.delete(key) : null))
+    )
   );
+  self.clients.claim();
 });
 
-// Estratégia de Cache: Busca primeiro no dispositivo, se não achar busca na rede
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      return cachedResponse || fetch(e.request);
-    })
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.match(event.request).then((cached) =>
+      cached || fetch(event.request).catch(() => caches.match('./index.html'))
+    )
   );
 });

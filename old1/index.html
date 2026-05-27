@@ -2,39 +2,41 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Orçamento Familiar - Dashboard BI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento Familiar - Dashboard BI Premium</title>
     <link rel="stylesheet" href="style.css">
-
+    
+    <!-- Conexão com o Manifesto da PWA -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#4f46e5">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="FinançasPro">
-    <link rel="icon" href="icon.svg" type="image/svg+xml">
+
+    <!-- Ícone da aba -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234f46e5'/%3E%3Ctext x='32' y='42' font-size='32' text-anchor='middle' fill='white'%3E$%3C/text%3E%3C/svg%3E">
 
     <script>
+        // Registra o Service Worker só quando estiver em http/https.
+        // Isso evita erro no celular quando abrir o arquivo direto pelo WhatsApp/Files.
         window.addEventListener('load', () => {
             const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
             if (isWeb && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(() => console.log('PWA: Service Worker ativado'))
-                    .catch((err) => console.log('PWA: erro ao registrar SW:', err));
+                    .then(() => console.log('PWA: Service Worker Ativado com Sucesso!'))
+                    .catch((err) => console.log('PWA: Erro ao registrar SW:', err));
             }
         });
     </script>
 </head>
 <body>
+
     <header class="main-header">
         <div class="container header-container">
-            <div class="brand-block">
-                <span class="eyebrow">Dashboard financeiro</span>
+            <div>
                 <h1>Orçamento Familiar</h1>
-                <p>Análise elegante de receitas, despesas, metas e previsão mensal.</p>
+                <p>Análise de Dados Orçamentário Familiar</p>
             </div>
-
             <div class="period-control">
-                <label for="month-selector">Período</label>
+                <label for="month-selector">Período de Análise:</label>
                 <select id="month-selector">
                     <option value="2026-01">Janeiro / 2026</option>
                     <option value="2026-02">Fevereiro / 2026</option>
@@ -53,82 +55,75 @@
         </div>
     </header>
 
-    <main class="main-layout">
+    <main class="container main-layout">
         <section class="card sidebar">
-            <div class="section-title">
-                <h2>Novos Lançamentos</h2>
-                <p>Registre entradas e saídas do mês.</p>
-            </div>
-
+            <h2>Novos Lançamentos</h2>
             <form id="finance-form">
                 <div class="form-group">
-                    <label for="type">Fluxo de Caixa</label>
+                    <label>Fluxo de Caixa</label>
                     <select id="type">
-                        <option value="receita">Receita / Entrada</option>
-                        <option value="despesa">Despesa / Saída</option>
+                        <option value="receita">🟢 Receita (Entrada)</option>
+                        <option value="despesa">🔴 Despesa (Saída)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Descrição do Item</label>
-                    <input type="text" id="description" placeholder="Ex: Salário, aluguel, escola" required>
+                    <label>Descrição do Item</label>
+                    <input type="text" id="description" placeholder="Ex: Salário, Aluguel, Mercado" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="amount">Valor Nominal (R$)</label>
+                    <label>Valor Nominal (R$)</label>
                     <input type="number" id="amount" step="0.01" placeholder="0,00" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">Categoria</label>
+                    <label>Segmentação / Categoria</label>
                     <select id="category">
                         <option value="Trabalho">Trabalho / Negócios</option>
-                        <option value="Moradia">Moradia</option>
+                        <option value="Moradia">Moradia (Aluguel, Luz, Internet)</option>
                         <option value="Alimentação">Alimentação</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Lazer">Lazer</option>
+                        <option value="Transporte">Transporte / Combustível</option>
+                        <option value="Lazer">Lazer / Viagens</option>
                         <option value="Educação">Educação</option>
                         <option value="Outros">Outros</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn-submit btn-primary">Registrar lançamento</button>
+                <button type="submit" class="btn-submit btn-primary">Registrar Lançamento</button>
             </form>
 
             <div class="history-section">
-                <h3>Planejamento mensal</h3>
+                <h3>Meta de Economia Mensal</h3>
                 <div class="form-group">
-                    <label for="meta-input">Meta de economia (R$)</label>
+                    <label>Alvo de Poupança (R$)</label>
                     <input type="number" id="meta-input" placeholder="Ex: 1000" min="0" step="10">
                 </div>
-                <div class="form-group">
-                    <label for="previsao-input">Previsão de receita (R$)</label>
-                    <input type="number" id="previsao-input" placeholder="Ex: 5000" min="0" step="10">
-                </div>
             </div>
 
+            <!-- CORREÇÃO DA ESTRUTURA: Blocos isolados verticalmente para evitar sobreposições e quebras -->
             <div class="history-section">
-                <h3>Gestão de dados</h3>
-
+                <h3>Gestão do Banco de Dados</h3>
+                
                 <button type="button" id="btn-export-pdf" class="btn-submit btn-pdf">
-                    Exportar relatório PDF
+                    📄 Exportar Relatório PDF
                 </button>
-
-                <div class="form-group import-group">
-                    <label for="excel-import">Importar planilha (.csv)</label>
-                    <input type="file" id="excel-import" accept=".csv,text/csv">
+                
+                <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                    <label style="font-size: 11px; margin-bottom: 6px;">Importar Planilha (.csv):</label>
+                    <input type="file" id="excel-import" accept=".csv">
                     <div class="template-link-wrapper">
-                        Precisa do padrão? <a href="#" id="btn-download-template" class="minimal-link">Baixar planilha modelo</a>
+                        Precisa do padrão? <a href="#" id="btn-download-template" class="minimal-link">📥 Baixar Planilha Modelo</a>
                     </div>
                 </div>
-
+                
                 <button type="button" id="btn-clear-db" class="btn-submit btn-clear">
-                    Limpar banco de dados
+                    🗑️ Limpar Banco de Dados
                 </button>
             </div>
 
             <div class="history-section">
-                <h3>Extrato do mês</h3>
+                <h3>Extrato Consolidado do Mês</h3>
                 <div id="transaction-list" class="transaction-list"></div>
             </div>
         </section>
@@ -136,59 +131,40 @@
         <section class="dashboard-content">
             <div class="kpi-grid">
                 <div class="card kpi-card kpi-receitas-top">
-                    <span class="kpi-title">Receitas realizadas</span>
+                    <span class="kpi-title">Faturamento Bruto</span>
                     <p id="kpi-receitas" class="kpi-value text-emerald">R$ 0,00</p>
                 </div>
                 <div class="card kpi-card kpi-despesas-top">
-                    <span class="kpi-title">Despesas totais</span>
+                    <span class="kpi-title">Custo Operacional Total</span>
                     <p id="kpi-despesas" class="kpi-value text-rose">R$ 0,00</p>
                 </div>
                 <div class="card kpi-card kpi-saldo-top">
-                    <span class="kpi-title">Resultado líquido</span>
+                    <span class="kpi-title">Margem / Resultado Líquido</span>
                     <p id="kpi-saldo" class="kpi-value">R$ 0,00</p>
-                </div>
-                <div class="card kpi-card kpi-previsao-top">
-                    <span class="kpi-title">Receita prevista</span>
-                    <p id="kpi-previsao" class="kpi-value">R$ 0,00</p>
-                    <small id="kpi-gap" class="kpi-note">Defina a previsão mensal.</small>
-                </div>
-            </div>
-
-            <div class="card chart-card" id="previsao-chart-card" style="display:none;">
-                <h3>Previsão de Receita</h3>
-                <p class="chart-subtitle">Comparativo entre receita realizada e receita planejada para o mês.</p>
-                <div class="bi-progress-wrapper">
-                    <div class="bi-progress-labels">
-                        <span class="chart-text-bold" id="previsao-status-text">Progresso da receita</span>
-                        <span id="previsao-progress-val" class="chart-text-bold">0%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div id="previsao-progress-bar" class="progress-bar-fill bg-blue"></div>
-                    </div>
                 </div>
             </div>
 
             <div class="chart-grid">
                 <div class="card chart-card">
-                    <h3>Centro de Custos</h3>
-                    <p class="chart-subtitle">Rateio de despesas por categoria.</p>
+                    <h3>Centro de Custos (Despesas)</h3>
+                    <p class="chart-subtitle">Rateio percentual e volumétrico por categoria</p>
                     <div id="category-bars" class="category-bars-container"></div>
                 </div>
 
                 <div class="card chart-card">
                     <h3>Balanço Patrimonial</h3>
-                    <p class="chart-subtitle">Proporção estrutural entre entradas e saídas.</p>
+                    <p class="chart-subtitle">Proporção estrutural entre Entradas e Saídas</p>
                     <div class="bi-progress-wrapper">
                         <div class="bi-progress-labels">
-                            <span class="chart-text-bold">Receitas</span>
+                            <span class="chart-text-bold">Receitas Consolidadas</span>
                             <span id="progresso-receitas-val" class="chart-text-bold">0%</span>
                         </div>
                         <div class="progress-bar-bg">
                             <div id="progresso-receitas" class="progress-bar-fill bg-emerald"></div>
                         </div>
-
-                        <div class="bi-progress-labels spaced">
-                            <span class="chart-text-bold">Despesas</span>
+                        
+                        <div class="bi-progress-labels" style="margin-top: 24px;">
+                            <span class="chart-text-bold">Despesas Consolidadas</span>
                             <span id="progresso-despesas-val" class="chart-text-bold">0%</span>
                         </div>
                         <div class="progress-bar-bg">
@@ -198,29 +174,29 @@
                 </div>
             </div>
 
-            <div class="card chart-card" id="meta-chart-card" style="display:none;">
-                <h3>Monitoramento da Meta</h3>
-                <p class="chart-subtitle">Progresso do saldo atual em relação à meta de economia.</p>
+            <div class="card chart-card" id="meta-chart-card" style="display: none;">
+                <h3>Monitoramento do Alvo de Economia</h3>
+                <p class="chart-subtitle">Progresso em relação ao saldo atual versus a meta estipulada</p>
                 <div class="bi-progress-wrapper">
                     <div class="bi-progress-labels">
-                        <span id="meta-status-text" class="chart-text-bold">Progresso da meta</span>
+                        <span id="meta-status-text" class="chart-text-bold">Progresso da Meta</span>
                         <span id="meta-progress-val" class="chart-text-bold">0%</span>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div id="meta-progress-bar" class="progress-bar-fill bg-emerald"></div>
+                    <div class="progress-bar-bg" style="height: 22px; border-radius: 11px;">
+                        <div id="meta-progress-bar" class="progress-bar-fill bg-emerald" style="height: 100%;"></div>
                     </div>
                 </div>
             </div>
 
             <div class="card chart-card">
-                <h3>Análise Temporal</h3>
-                <p class="chart-subtitle">Evolução do saldo acumulado mês a mês.</p>
+                <h3>Análise Temporal Macroeconômica</h3>
+                <p class="chart-subtitle">Evolução do Saldo Acumulado Mês a Mês (Dados Guardados)</p>
                 <div id="timeline-chart" class="timeline-container"></div>
             </div>
 
             <div class="card insight-card">
-                <h3>Diagnóstico inteligente</h3>
-                <p id="bi-insight">Aguardando inserção de dados para rodar a análise financeira.</p>
+                <h3>💡 Diagnóstico do Consultor Corporativo</h3>
+                <p id="bi-insight">Aguardando inserção de dados para rodar modelos matemáticos...</p>
             </div>
         </section>
     </main>
