@@ -1,18 +1,69 @@
-# FinançasPro BI — versão corrigida
+# FinançasPro BI — Orçamento Pessoal
 
-Melhorias aplicadas:
+Dashboard financeiro/PWA para controle de receitas, despesas, metas, previsão mensal e análise visual do orçamento familiar.
 
-- Layout mobile corrigido para não ficar espremido.
-- Visual mais moderno, sofisticado e elegante.
-- Botões redesenhados com melhor área de toque.
-- Espaçamentos revisados.
-- Categoria **Educação** adicionada no formulário, importador CSV e gráficos.
-- Campo **Previsão de receita** adicionado.
-- Novo card de receita prevista e barra de progresso da previsão.
-- Manifest e Service Worker ajustados.
-- Ícone local em SVG, sem dependência externa.
+## Visão geral
 
-Para abrir:
-1. Extraia o ZIP.
-2. Abra `index.html`.
-3. Para instalar como app/PWA, hospede os arquivos em HTTPS ou servidor local.
+O FinançasPro BI foi criado para demonstrar construção de interfaces de dashboard, manipulação de dados financeiros, formulários, gráficos, previsão de receita e recursos PWA.
+
+O projeto é útil para apresentar habilidades de front-end, lógica de negócio, organização de dados e experiência visual em aplicações administrativas.
+
+## Principais funcionalidades
+
+- Cadastro de receitas.
+- Cadastro de despesas.
+- Seleção de período mensal.
+- Categorias financeiras.
+- Previsão de receita.
+- Card de receita prevista.
+- Barra de progresso da previsão.
+- Importador CSV.
+- Gráficos e indicadores.
+- Layout responsivo.
+- Manifest PWA.
+- Service Worker.
+- Ícone local em SVG.
+
+## Stack
+
+- HTML5
+- CSS3
+- JavaScript
+- PWA
+- Service Worker
+- Manifest Web App
+
+## Como executar
+
+Abra o arquivo `index.html` no navegador.
+
+Para testar como PWA, hospede os arquivos em HTTPS ou execute com servidor local.
+
+Exemplo:
+
+```bash
+npx serve .
+```
+
+## Diferenciais técnicos
+
+- Interface em formato de dashboard.
+- Lógica financeira aplicada.
+- Manipulação de formulários.
+- Organização por período.
+- Recursos PWA.
+- Responsividade mobile.
+- Visual moderno e profissional.
+
+## Posicionamento no portfólio
+
+Este projeto deve ser usado como case de dashboard, JavaScript, PWA, UX/UI e manipulação de dados de negócio.
+
+## Próximas melhorias
+
+- Persistência local mais robusta.
+- Exportação de relatório PDF.
+- Gráficos mais avançados.
+- Autenticação de usuário.
+- Backend para armazenamento em nuvem.
+- Testes automatizados.
